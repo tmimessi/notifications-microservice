@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id          String    @id
+  recipientId String
+  content     String
+  category    String
+  createdAt   DateTime  @default(now())
+  canceledAt  DateTime? 
+  readAt      DateTime? // pode ser nulo --- a pessoa pode ainda não ter lido a notificação
+
+  @@index([recipientId]) // campo para exibir as notificações de um usuário em específico ---- referenciando a tabela de recipiente, mesmo sem tê-la; é o id do usuário que vem de outro microsserviço (autenticação, por exemplo); os índices garantem a facilidade de buscar informações que são filtradas por um campo ou a soma de mais campos em específico
+}
